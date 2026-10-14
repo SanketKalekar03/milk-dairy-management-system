@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API = (import.meta.env.VITE_API_URL || 'http://localhost:5000').replace(/\/+$/, '');
 const today = new Date().toISOString().slice(0, 10);
 
 async function request(path, options) {
@@ -39,6 +39,7 @@ export default function App() {
         customerId: current.customerId || customerList[0]?._id || '',
       }));
     } catch (error) {
+      setDbStatus('offline');
       setMessage(`Server error: ${error.message}`);
     } finally {
       setLoading(false);
@@ -108,8 +109,8 @@ export default function App() {
         </a>
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
           <span className="live">
-            <i style={{ background: dbStatus === 'connected' ? '#2e7d32' : '#2e7d32' }} />
-            {dbStatus === 'connected' ? 'Atlas Connected' : 'Server Online'}
+            <i style={{ background: dbStatus === 'connected' ? '#2e7d32' : '#c62828' }} />
+            {dbStatus === 'connected' ? 'Database Connected' : dbStatus === 'checking' ? 'Checking database…' : 'Database Offline'}
           </span>
         </div>
       </header>
